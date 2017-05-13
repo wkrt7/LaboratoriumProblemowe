@@ -1,26 +1,26 @@
 clear all; close all;
 
 %% Martwa strefa
-% ramp_up = load('../pomiary/ramp1_new.mat');
-% ramp_down = load('../pomiary/ramp2_new.mat')
-% figure(1); hold on; grid on;
-% axis([-1.3 1.3 -150 150 ])
-% plot(ramp_up.obiekt.signals(1).values, ramp_up.obiekt.signals(3).values)
-% plot(ramp_down.obiekt.signals(1).values, ramp_down.obiekt.signals(3).values, 'r')
-% legend('Ramp-up', 'Ramp-down')
-% xlabel('sterowanie [V]'); ylabel('prêdkoœæ [rad/s]');
-% print('obrazy/martwa_strefa.png', '-dpng', '-r600')
-% %martwa_plus = [0 0.08]
-% %martwa_minus = [-0.08 0.03]
-% 
-% %Odczytane na oko - do weryfikacji
+ramp_up = load('../pomiary/ramp1_new.mat');
+ramp_down = load('../pomiary/ramp2_new.mat');
+figure(1); hold on; grid on;
+axis([-1.3 1.3 -150 150 ])
+plot(ramp_up.obiekt.signals(1).values, ramp_up.obiekt.signals(3).values)
+plot(ramp_down.obiekt.signals(1).values, ramp_down.obiekt.signals(3).values, 'r')
+legend('Ramp-up', 'Ramp-down')
+xlabel('sterowanie [V]'); ylabel('prêdkoœæ [rad/s]');
+print('../obrazy/martwa_strefa.png', '-dpng', '-r600')
+%martwa_plus = [0 0.08]
+%martwa_minus = [-0.08 0.03]
+
+%Odczytane na oko - do weryfikacji
 martwa_strefa = 0.08;
 % 
 % 
 %% OFFSET
 % Wersja ze sterowaniem zerowym
 load('../pomiary/zero.mat')
-offset = mean(obiekt.signals(3).values(100:end-100))
+offset = mean(obiekt.signals(3).values(100:end-100));
 
 %% Identyfikacja
 dir_data = '../pomiary/skok/';
@@ -59,5 +59,9 @@ figure(2)
 hold on; grid on;
 plot(obiekt.time, obiekt.signals(3).values-offset)
 plot(t, y, 'r')
+legend('OdpowiedŸ obiektu', 'OdpowiedŸ modelu', 'Location', 'northwest');
+xlabel('czas [s]'); ylabel('prêdkoœæ [rad/s]');
+axis([0 100 -150 150])
+print('../obrazy/identyfikacja.png', '-dpng', '-r600')
 % 
-% save('parametry', 'martwa_strefa', 'offset', 'K', 'T');
+save('parametry', 'martwa_strefa', 'offset', 'K', 'T');
