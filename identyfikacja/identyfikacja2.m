@@ -23,25 +23,32 @@ load('../pomiary/zero.mat')
 offset = mean(obiekt.signals(3).values(100:end-100));
 
 %% Identyfikacja
-dir_data = '../pomiary/';
-mat_files = dir(strcat(dir_data, 'square_001.mat'));
+dir_data = '../pomiary/skok/plus/';
+mat_files = dir(strcat(dir_data, '*.mat'));
 options = optimset('MaxFunEvals',10000);
 
 for i = 1:length(mat_files)
     load(strcat(dir_data,num2str(mat_files(i).name))); 
     [opt err] = fminsearch(@(x) fun_celu(x, obiekt.time(10:end), obiekt.signals(1).values(10:end), obiekt.signals(3).values(10:end)-offset), [1 1], options);
-    K_temp(i) = opt(1);
-    T_temp(i) = opt(2);
-    
+    K_temp_plus(i) = opt(1);
+    T_temp_plus(i) = opt(2);
 end
 
-% load('../pomiary/sinus/sinus001.mat')
-% load('../pomiary/skok/plus/skok09.mat')
-%load('../pomiary/skok_jednostkowy')
-load('../pomiary/square_001.mat')
+dir_data = '../pomiary/skok/minus/';
+mat_files = dir(strcat(dir_data, '*.mat'));
+options = optimset('MaxFunEvals',10000);
 
-K = mean(K_temp)
-T = mean(T_temp)
+for i = 1:length(mat_files)
+    load(strcat(dir_data,num2str(mat_files(i).name))); 
+    [opt err] = fminsearch(@(x) fun_celu(x, obiekt.time(10:end), obiekt.signals(1).values(10:end), obiekt.signals(3).values(10:end)-offset), [1 1], options);
+    K_temp_minus(i) = opt(1);
+    T_temp_minus(i) = opt(2);
+end
+
+load('../pomiary/skok/minus/skokminus09.mat')
+
+K = mean(K_temp_minus)
+T = mean(T_temp_minus)
 
 obiekt_sym = tf(K, [T 1]);
  
@@ -64,6 +71,3 @@ plot(t, y, 'r')
 legend('OdpowiedŸ obiektu', 'OdpowiedŸ modelu', 'Location', 'northwest');
 xlabel('czas [s]'); ylabel('prêdkoœæ [rad/s]');
 axis([0 100 -150 150])
-print('../obrazy/identyfikacja.png', '-dpng', '-r600')
-% 
-save('parametry', 'martwa_strefa', 'offset', 'K', 'T');
