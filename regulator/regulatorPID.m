@@ -1,6 +1,6 @@
 clear all; close all;
-load('../identyfikacja/parametry.mat')
-sim('model.slx')
+load('../identyfikacja/parametry2.mat')
+
 [opt err] = fminsearch(@(params) q_pid(params), [0 0 0 0]);
 Kp = opt(1)
 Ki = opt(2)

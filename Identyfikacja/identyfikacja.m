@@ -23,8 +23,8 @@ load('../pomiary/zero.mat')
 offset = mean(obiekt.signals(3).values(100:end-100));
 
 %% Identyfikacja
-dir_data = '../pomiary/';
-mat_files = dir(strcat(dir_data, 'square_001.mat'));
+dir_data = '../pomiary/test/';
+mat_files = dir(strcat(dir_data, '*.mat'));
 options = optimset('MaxFunEvals',10000);
 
 for i = 1:length(mat_files)
@@ -38,7 +38,7 @@ end
 % load('../pomiary/sinus/sinus001.mat')
 % load('../pomiary/skok/plus/skok09.mat')
 %load('../pomiary/skok_jednostkowy')
-load('../pomiary/square_001.mat')
+load('../pomiary/test/skok09.mat')
 
 K = mean(K_temp)
 T = mean(T_temp)

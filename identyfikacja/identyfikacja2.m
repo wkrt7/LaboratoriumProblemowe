@@ -29,7 +29,7 @@ options = optimset('MaxFunEvals',10000);
 
 for i = 1:length(mat_files)
     load(strcat(dir_data,num2str(mat_files(i).name))); 
-    [opt err] = fminsearch(@(x) fun_celu(x, obiekt.time(10:end), obiekt.signals(1).values(10:end), obiekt.signals(3).values(10:end)-offset), [1 1], options);
+    [opt err] = fminsearch(@(x) fun_celu(x, obiekt.time, obiekt.signals(1).values, obiekt.signals(3).values-offset), [1 1], options);
     K_temp_plus(i) = opt(1);
     T_temp_plus(i) = opt(2);
 end
@@ -40,15 +40,20 @@ options = optimset('MaxFunEvals',10000);
 
 for i = 1:length(mat_files)
     load(strcat(dir_data,num2str(mat_files(i).name))); 
-    [opt err] = fminsearch(@(x) fun_celu(x, obiekt.time(10:end), obiekt.signals(1).values(10:end), obiekt.signals(3).values(10:end)-offset), [1 1], options);
+    [opt err] = fminsearch(@(x) fun_celu(x, obiekt.time, obiekt.signals(1).values, obiekt.signals(3).values-offset), [1 1], options);
     K_temp_minus(i) = opt(1);
     T_temp_minus(i) = opt(2);
 end
 
 load('../pomiary/skok/minus/skokminus09.mat')
 
-K = mean(K_temp_minus)
-T = mean(T_temp_minus)
+K_plus = mean(K_temp_plus)
+T_plus = mean(T_temp_plus)
+K_minus = mean(K_temp_minus)
+T_minus = mean(T_temp_minus)
+
+K = (K_plus + K_minus)/2
+T = (T_plus + T_minus)/2
 
 obiekt_sym = tf(K, [T 1]);
  
@@ -71,3 +76,7 @@ plot(t, y, 'r')
 legend('OdpowiedŸ obiektu', 'OdpowiedŸ modelu', 'Location', 'northwest');
 xlabel('czas [s]'); ylabel('prêdkoœæ [rad/s]');
 axis([0 100 -150 150])
+
+save('parametry_plus', 'martwa_strefa', 'offset', 'K_plus', 'T_plus');
+save('parametry_minus', 'martwa_strefa', 'offset', 'K_minus', 'T_minus');
+save('parametry2',  'martwa_strefa', 'offset', 'K', 'T');

@@ -1,7 +1,7 @@
 close all; clear all;
 
-load('parametry.mat')
-load('../pomiary/skok_jednostkowy.mat')
+load('parametry2.mat')
+load('../pomiary/square_001.mat')
 
 
 NUM = [K];
@@ -26,3 +26,6 @@ plot(t, y, 'r')
 
 diff2 = y-(obiekt.signals(3).values-offset);
 err2 = sum(diff2.^2)
+
+figure; grid on; hold on;
+plot(obiekt.time, y-obiekt.signals(3).values )
